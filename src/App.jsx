@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
 import Dolomites from "./data/dolomites";
 
-console.log(Dolomites)
-
 function App() {
 
   const [currIndex, setCurrIndex] = useState(0);
   const { image, title, text } = Dolomites[currIndex];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrIndex((prevIndex) => (prevIndex + 1) % Dolomites.length)
+    }, 5000)
+    return () => clearInterval(interval);
+  }, []);
 
   const handleNext = () => {
     setCurrIndex(prevIndex => (prevIndex + 1) % Dolomites.length);
@@ -25,38 +30,55 @@ function App() {
   return (
     <>
       <header>
-        <h1>React Mountains Carousel</h1>
+        <h1>Benvenuto nelle Dolomiti!</h1>
       </header>
 
+      {/* Image Info */}
+      <div className="image-info">
+        <div className="image-title">{title}</div>
+        <div className="image-text">{text}</div>
+      </div>
+      
+      {/* Carousel */}
       <div className="carousel">
 
-        <button
+        {/* Prev Button */}
+        <div
+          className="btn"
           onClick={handlePrevious}
         >
-          Prev
-        </button>
-
-        <div>
-          <img src={image} alt={title} />
-
+          <i className="fa-solid fa-angles-left"></i>
         </div>
 
-        <button
+        {/* Main Image */}
+        <div className="main-image">
+          <img 
+            src={image} 
+            alt={title} 
+          />
+        </div>
+
+        {/* Next Button */}
+        <div
+          className="btn"
           onClick={handleNext}
         >
-          Next
-        </button>
+          <i className="fa-solid fa-angles-right"></i>
+        </div>
 
       </div>
 
-      <ul>
+      {/* Thumbnails */}
+      <ul className="thumbs-container">
         {Dolomites.map((currImage, index) => (
 
           <li
+            className="thumbnails"
             key={index}
             onClick={() => handleThumbClick(index)}
           >
             <img
+              className={index === currIndex ? "active" : ""}
               src={currImage.image} 
               alt={currImage.title} 
             />
